@@ -7,9 +7,9 @@ class AlwaysDownService < ApplicationService
     puts "Service #{@service['name']} is always down".red unless @silent
 
     {
-      service: @service['name'],
+      name: @service['name'],
       status: 'down',
-      time: Time.now
+      date: Time.now
     }
   end
 end
