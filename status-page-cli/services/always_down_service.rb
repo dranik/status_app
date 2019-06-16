@@ -1,7 +1,7 @@
 require_relative 'application_service'
 
-# this service is used for any web-application if there is no special service to
-# work with this application
+# this a sample of a custom implemented server
+# this one is dumb but it ives a general idea how to write a custom implementation
 class AlwaysDownService < ApplicationService
   def pull
     puts "Service #{@service['name']} is always down".red unless @silent

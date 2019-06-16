@@ -2,4 +2,5 @@ source 'https://rubygems.org'
 
 gem 'colorize'
 gem 'sequel'
+gem 'terminal-table'
 gem 'thor'

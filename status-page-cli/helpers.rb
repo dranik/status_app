@@ -12,4 +12,12 @@ module Helpers
     puts "Service #{service['name']} has no implementation, trying default".yellow
     DefaultService
   end
+
+  def filter_services(services, options)
+    only = options['only'] || services.keys
+    except = options['except'] || []
+    services
+      .select { |key, value| only.member?(key) || only.member?(value['name']) }
+      .select { |key, value| !(except.member?(key) || except.member?(value['name'])) }
+  end
 end
