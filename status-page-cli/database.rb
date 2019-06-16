@@ -24,13 +24,12 @@ class Database
   end
 
   def method_missing(*args)
-    skip_methods = %i[to_a to_hash to_io to_str to_ary to_int]
-    super if skip_methods.include? args[0]
+    return @db[args[0]] if @db.table_exists?(args[0])
 
-    @db[args[0]] if @db.table_exists?(args[0])
+    super
   end
 
-  def respond_to?(method_name, include_private = false)
+  def respond_to_missing?(method_name, include_private = false)
     @db.table_exists?(method_name) || super
   end
 end
