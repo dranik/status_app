@@ -2,7 +2,7 @@
 
 ## How to run 
 
-Make sure you have Ruby and Bundler installed then do
+Make sure you have Ruby, Sqlite and Bundler installed then do
 ```
 chmod +x main.rb
 ./main.rb pull
