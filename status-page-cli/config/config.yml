@@ -1,0 +1,18 @@
+# for any settings we have this class
+services:
+  github:
+    name: 'Github'
+    options:
+      host: ['github.com', 'github.io']
+  bitbucket:
+    name: 'BitBucket'
+    options:
+      host: ['bitbucket.org', 'id.atlassian.com']
+      policy: 'all'
+  rubygems:
+    name: 'RubyGems'
+    options:
+      host: 'rubygems.org'
+  always_down:
+    name: 'Always Down'
+    implementation: 'always_down'
