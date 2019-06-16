@@ -1,6 +1,8 @@
 require 'colorize'
 require 'thor'
 require 'yaml'
+require 'terminal-table'
+require 'fileutils'
 require_relative 'services/default_service'
 require_relative 'helpers'
 require_relative 'database'
@@ -44,15 +46,41 @@ class CLI < Thor
     end
   end
 
-  option :except, type: :array
-  option :only, type: :array
+  option :status, type: :string
+  option :service, type: :string
   desc 'history', 'show historical data'
 
   def history
-    p DB.entries.all
+    params = {}
+    params[:status] = options['status'] if options['status']
+    params[:name] = options['service'] if options['service']
+    collection = DB.entries.where(params)
+    table = Terminal::Table.new do |t|
+      t << %w[Service State Time]
+      t << :separator
+      collection.each do |entry|
+        t.add_row [entry[:name], entry[:status] == 'up' ? entry[:status].green : entry[:status].red, entry[:date]]
+      end
+    end
+    puts table
   end
 
+  desc 'backup PATH', 'copy gathered data'
 
+  def backup(path)
+    FileUtils.cp('default', path)
+    puts "Database copied to #{path}".blue
+  end
+
+  option :drop, type: :boolean, default: false
+  desc 'restore PATH', 'restore data from another copy of db'
+
+  def restore(path)
+    db2 = Database.new(path)
+    collection = db2.entries.all
+    DB.drop if options["drop"]
+    collection.each {|entry| DB.entries.insert entry.select {|key, _value| key!=:id} }
+  end
 end
 
 CLI.start(ARGV)

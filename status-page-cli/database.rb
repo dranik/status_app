@@ -18,6 +18,11 @@ class Database
     end
   end
 
+  def drop
+    @db.drop_table(:entries)
+    migrate
+  end
+
   def method_missing(*args)
     skip_methods = %i[to_a to_hash to_io to_str to_ary to_int]
     super if skip_methods.include? args[0]
