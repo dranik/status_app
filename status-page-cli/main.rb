@@ -78,8 +78,10 @@ class CLI < Thor
   def restore(path)
     db2 = Database.new(path)
     collection = db2.entries.all
-    DB.drop if options["drop"]
-    collection.each {|entry| DB.entries.insert entry.select {|key, _value| key!=:id} }
+    DB.drop if options['drop']
+    collection.each do |entry|
+      DB.entries.insert(entry.reject { |key, _value| key == :id })
+    end
   end
 end
 
