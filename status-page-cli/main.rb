@@ -6,11 +6,13 @@ require 'terminal-table'
 require 'fileutils'
 require_relative 'services/default_service'
 require_relative 'helpers'
-require_relative 'database'
+require_relative 'storage/database'
+require_relative 'storage/json'
 
+SQL = false
 CONFIG = YAML.load_file('config/config.yml')
 TITLE = 'CLI service status tool'.freeze
-DB = Database.new
+DB = (SQL ? Database : Json).new
 
 # cli controller
 class CLI < Thor
@@ -29,7 +31,7 @@ class CLI < Thor
     services.each do |_key, service|
       klass = define_implementation(service)
       entry = klass.new(options['nodisplay'], service).pull
-      DB.entries.insert entry unless options['nosave']
+      DB.insert entry unless options['nosave']
     end
   end
 
@@ -55,7 +57,7 @@ class CLI < Thor
     params = {}
     params[:status] = options['status'] if options['status']
     params[:name] = options['service'] if options['service']
-    collection = DB.entries.where(params)
+    collection = DB.where(params)
     table = Terminal::Table.new do |t|
       t << %w[Service State Time]
       t << :separator
@@ -69,7 +71,7 @@ class CLI < Thor
   desc 'backup PATH', 'copy gathered data'
 
   def backup(path)
-    FileUtils.cp('default', path)
+    FileUtils.cp("default#{SQL ? '' : '.json'}", path)
     puts "Database copied to #{path}".blue
   end
 
@@ -77,11 +79,11 @@ class CLI < Thor
   desc 'restore PATH', 'restore data from another copy of db'
 
   def restore(path)
-    db2 = Database.new(path)
-    collection = db2.entries.all
+    db2 = (SQL ? Database : Json).new(path)
+    collection = db2.all
     DB.drop if options['drop']
     collection.each do |entry|
-      DB.entries.insert(entry.reject { |key, _value| key == :id })
+      DB.insert(entry.reject { |key, _value| key == :id })
     end
   end
 end

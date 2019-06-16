@@ -18,9 +18,21 @@ class Database
     end
   end
 
+  def insert(entry)
+    @db[:entries].insert(entry)
+  end
+
   def drop
     @db.drop_table(:entries)
     migrate
+  end
+
+  def where(params)
+    @db[:entries].where(params)
+  end
+
+  def all
+    @db[:entries].all
   end
 
   def method_missing(*args)
