@@ -79,17 +79,17 @@ Copies the content of the previously copied db into current db
 ```
 Drops current db then copies the content of the previously copied db into current db
 
-##Config
+## Config
 
 The tool has to be configured by editing `config/config.yml`
 
-###DB mode
+### DB mode
 Tool can utilize SQL or JSON for its backend. Use `sql` to toggle these modes.
 ```yaml
 sql: false
 ```
 
-###Services
+### Services
 ```yaml
 services:
   bitbucket:
