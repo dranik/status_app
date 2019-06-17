@@ -30,12 +30,4 @@ class GithubService < ApplicationService
          SocketError
     false
   end
-
-  def ok_or_fail(flag)
-    if flag
-      puts 'OK!'.green
-    else
-      puts 'Fail'.red
-    end
-  end
 end
