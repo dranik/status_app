@@ -9,10 +9,11 @@ require_relative 'helpers'
 require_relative 'storage/database'
 require_relative 'storage/json'
 
-SQL = false
 CONFIG = YAML.load_file('config/config.yml')
+SQL = CONFIG['sql']
 TITLE = 'CLI service status tool'.freeze
 DB = (SQL ? Database : Json).new
+p SQL
 
 # cli controller
 class CLI < Thor
@@ -71,7 +72,7 @@ class CLI < Thor
   desc 'backup PATH', 'copy gathered data'
 
   def backup(path)
-    FileUtils.cp(@db.filename, path)
+    FileUtils.cp(DB.filename, path)
     puts "Database copied to #{path}".blue
   end
 

@@ -1,4 +1,5 @@
 # for any settings we have this class
+sql: true
 services:
   github:
     name: 'Github'
@@ -6,9 +7,6 @@ services:
   bitbucket:
     name: 'BitBucket'
     implementation: 'bitbucket'
-    options:
-      host: ['bitbucket.org', 'id.atlassian.com']
-      policy: 'all'
   rubygems:
     name: 'RubyGems'
     implementation: 'rubygems'
