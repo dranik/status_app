@@ -1,8 +1,8 @@
-require_relative '../../storage/database'
+require_relative '../../storage/json'
 
 RSpec.describe 'Database' do
   before(:each) do
-    @db = Database.new 'testfile'
+    @db = Json.new 'testfile'
   end
 
   describe 'insert' do
@@ -30,7 +30,11 @@ RSpec.describe 'Database' do
         { name: 'Name3', status: 'up', date: time }
       ]
       entries.each { |entry| @db.insert(entry) }
-      expect(@db.all.map { |entry| entry.reject { |key, _value| key == :id } }).to eq entries
+      expect(@db.all).to eq [
+        { name: 'Name', status: 'up', date: time.to_s },
+        { name: 'Name2', status: 'up', date: time.to_s },
+        { name: 'Name3', status: 'up', date: time.to_s }
+      ]
     end
   end
 
@@ -44,25 +48,27 @@ RSpec.describe 'Database' do
         { name: 'Name3', status: 'up', date: time }
       ]
       entries.each { |entry| @db.insert(entry) }
-      expect(
-        @db.where({}).map { |entry| entry.reject { |key, _value| key == :id } }
-      ).to eq entries
 
-      expect(
-        @db.where(status: 'up').map { |entry| entry.reject { |key, _value| key == :id } }
-      ).to eq [ { name: 'Name', status: 'up', date: time }, { name: 'Name3', status: 'up', date: time } ]
+      expect(@db.where({})).to eq [
+        { name: 'Name', status: 'up', date: time.to_s },
+        { name: 'Name2', status: 'down', date: time.to_s },
+        { name: 'Name3', status: 'up', date: time.to_s }
+      ]
 
-      expect(
-        @db.where(status: 'down').map { |entry| entry.reject { |key, _value| key == :id } }
-      ).to eq [{ name: 'Name2', status: 'down', date: time }]
+      expect(@db.where(status: 'up')).to eq [
+        { name: 'Name', status: 'up', date: time.to_s },
+        { name: 'Name3', status: 'up', date: time.to_s }
+      ]
 
-      expect(
-        @db.where(name: 'Name').map { |entry| entry.reject { |key, _value| key == :id } }
-      ).to eq [{ name: 'Name', status: 'up', date: time }]
+      expect(@db.where(status: 'down')).to eq [
+        { name: 'Name2', status: 'down', date: time.to_s }
+      ]
 
-      expect(
-        @db.where(name: 'Name', status: 'down').map { |entry| entry.reject { |key, _value| key == :id } }
-      ).to eq []
+      expect( @db.where(name: 'Name')).to eq [
+        { name: 'Name', status: 'up', date: time.to_s }
+      ]
+      
+      expect(@db.where(name: 'Name', status: 'down')).to eq []
     end
   end
 

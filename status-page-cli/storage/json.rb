@@ -1,10 +1,7 @@
 require 'json'
+require_relative 'base_storage'
 # implementation for json storage
-class Json
-  def initialize(file = 'default.json')
-    @filename = file
-  end
-
+class Json < BaseStorage
   def insert(entry)
     create unless File.file?(@filename)
     array = JSON.parse(File.read(@filename))
@@ -32,5 +29,9 @@ class Json
     where
   end
 
+  private
 
+  def create
+    File.write(@filename, [].to_json)
+  end
 end

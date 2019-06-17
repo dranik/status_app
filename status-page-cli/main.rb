@@ -71,7 +71,7 @@ class CLI < Thor
   desc 'backup PATH', 'copy gathered data'
 
   def backup(path)
-    FileUtils.cp("default#{SQL ? '' : '.json'}", path)
+    FileUtils.cp(@db.filename, path)
     puts "Database copied to #{path}".blue
   end
 

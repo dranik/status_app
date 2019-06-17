@@ -1,21 +1,12 @@
 require 'sequel'
+require_relative 'base_storage'
 
 # little wrapper for the sequel
-class Database
+class Database < BaseStorage
   def initialize(file = 'default')
     @db = Sequel.connect("sqlite://#{file}")
     migrate
-  end
-
-  def migrate
-    return if @db.table_exists?(:entries)
-
-    @db.create_table :entries do
-      primary_key :id
-      String :name, null: false
-      String :status, null: false
-      DateTime :date, null: false
-    end
+    super
   end
 
   def insert(entry)
@@ -43,5 +34,18 @@ class Database
 
   def respond_to_missing?(method_name, include_private = false)
     @db.table_exists?(method_name) || super
+  end
+
+  private
+
+  def migrate
+    return if @db.table_exists?(:entries)
+
+    @db.create_table :entries do
+      primary_key :id
+      String :name, null: false
+      String :status, null: false
+      DateTime :date, null: false
+    end
   end
 end
