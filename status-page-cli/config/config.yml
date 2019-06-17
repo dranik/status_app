@@ -2,17 +2,32 @@
 services:
   github:
     name: 'Github'
-    options:
-      host: ['github.com', 'github.io']
+    implementation: 'github'
   bitbucket:
     name: 'BitBucket'
+    implementation: 'bitbucket'
     options:
       host: ['bitbucket.org', 'id.atlassian.com']
       policy: 'all'
   rubygems:
     name: 'RubyGems'
+    implementation: 'rubygems'
+  cloudfare:
+    name: 'Cloudfare'
+    implementation: 'cloudfare'
+  facebook:
+    name: 'Facebook'
     options:
-      host: 'rubygems.org'
+      host: 'facebook.com'
+  bash:
+    name: 'Bash.im'
+    options:
+      host: 'bash.im'
+  somehosts:
+    name: 'Somehosts'
+    options:
+      host: ['bitbucket.org', 'id.atlassian.com', 'medium.com', 'elixir-lang.org']
+      policy: 'all'
   always_down:
     name: 'Always Down'
     implementation: 'always_down'

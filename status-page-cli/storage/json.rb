@@ -1,5 +1,5 @@
 require 'json'
-# little wrapper for the sequel
+# implementation for json storage
 class Json
   def initialize(file = 'default.json')
     @filename = file

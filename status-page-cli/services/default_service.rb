@@ -23,9 +23,11 @@ class DefaultService < ApplicationService
   private
 
   def check(host)
-    Net::HTTP.get(host, '/')
-    true
-  rescue
+    response = Net::HTTP.get_response(host, '/')
+    [200, 301, 302].member?(response.code.to_i)
+  rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
+         Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError,
+         SocketError
     false
   end
 
