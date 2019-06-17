@@ -120,19 +120,19 @@ Here are the steps to create your own implementation:
 
 Create file `services/my_service.rb`. Be attentive about naming.
 ```ruby
-  require_relative 'application_service'
-  class MyService < ApplicationService
-    def pull
-      # in real life here must be more sensible calculation
-      # @service is settings structure that is forwarded from config
-      # if @silent is true, make sure you make no output to console
-      {
-        name: 'MyService',
-        status: ['up', 'down'].sample,
-        date: Time.now
-      }
-    end
+require_relative 'application_service'
+class MyService < ApplicationService
+  def pull
+    # in real life here must be more sensible calculation
+    # @service is settings structure that is forwarded from config
+    # if @silent is true, make sure you make no output to console
+    {
+      name: 'MyService',
+      status: ['up', 'down'].sample,
+      date: Time.now
+    }
   end
+end
 ```
 IMPORTANT! make sure `pull` method returns hash as shown above
 
